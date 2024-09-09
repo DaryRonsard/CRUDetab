@@ -1,0 +1,154 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utilisateur</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="{% static 'student/style.css'%}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-light">
+    <div class="d-flex">
+        <nav class="site bg-light p-3">
+            <div class="text-center mb-4">
+                <img src="images/etat.jpg" alt="LogoMonEtab" class="img-fluid" style="width: 50px;">
+                <h4>Mon Etab</h4>
+            </div>
+            <hr>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Tableau de bord</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="eleve.html"><i class="fas fa-chalkboard-teacher"></i> Élèves</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="professeur.html"><i class="fas fa-users"></i> Professeurs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="Utilisateur.html"><i class="fas fa-user-graduate"></i>Utilisateurs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="rapport.html"><i class="fas fa-users"></i>Rapport </a>
+                </li>
+            </ul>
+            
+            <div class="mt-auto">
+                <hr>
+                <a href="index.html" class="btn btn-danger btn-block"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+            </div>
+        </nav>
+
+
+        <div class="content p-4">
+            <h2 class="mb-4">USER (2)</h2>
+            <div class="d-flex justify-content-end mb-4">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AjouterUtilisateurModal"><i class="fas fa-plus-circle"></i> Nouvel Utilisateurs</button>
+            </div>
+            <table class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Pseudo</th>
+                        <th scope="col">Date de Creation</th>
+                        <th scope="col">Actions</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                 {% for user in users %}
+                    <tr>
+                        <td>{{ user.pseudo }}</td>
+                        <td>{{ user.create_at }}</td>
+
+                      <td>
+                       <button class="btn btn-warning btn-sm text-center" data-bs-toggle="modal" data-bs-target="#ModifierUtilissateurModal" onclick="window.location.href='{% url "user:update-user" user.id %}'"><i class="fas fa-edit"></i> Modifier</button>
+                            <!--<button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal"><i class="fas fa-trash"></i>Supprimer</button>-->
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+
+    <!-- Modifier Utilisateur -->
+    <div class="modal fade" id="ModifierUtilissateurModal" tabindex="-1" aria-labelledby="ModifierUtilissateurLabel" tabindex="-1" aria-labelledby="ModifierUtilissateurLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="ModifierUtilissateurLabel">Modifier User !!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                 <form method="post" class="post-form" >
+                     {% csrf_token %}
+
+                        <div class="form group">
+                            <label for="identifiant">Utilisateurs</label>
+                            <input type="text" class="form-control" id="pseudo" name="pseudo" value="">
+
+                            {{ form.pseudo }}
+                        </div>
+                        <div class="form group">
+                            <label for="mdp">Ancien Mot de passe</label>
+                            {{ form.password }}
+                        </div>
+                        <div class="form group">
+                            <label for="mdp">Nouveau Mot de passe</label>
+                            {{ form }}
+                        </div>
+                     <!--<input type="submit" class="form-control-primary" id="password" placeholder="Entrer votre Mot de passe">
+                     --> <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    </form>
+            
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary" id="confirmDeleteButton">Enregitrer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ajouter Utilisateur -->
+    <div class="modal fade" id="AjouterUtilisateurModal" tabindex="-1" aria-labelledby="AjouterUtilisateurLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="AjouterUtilisateurLabel">ATTENTION !!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="form group">
+                            <label for="pseudo">Utilisateurs</label>
+                            {{form.pseudo}}
+                        </div>
+                        <div class="form group">
+                            <label for="password">Mot de passe</label>
+                            {{form.password}}
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary" id="confirmDeleteButton">Enregitrer</button>
+                    </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    </div>
+
+    </div>
+</body>
+</html>

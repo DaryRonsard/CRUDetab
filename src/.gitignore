@@ -1,0 +1,3 @@
+student/migrations/*
+user/migrations/*
+teacher/migrations/*
